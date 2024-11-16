@@ -1,7 +1,8 @@
-package com.clementine.weatherapp
+package com.clementine.weatherapp.model
 
 data class Forecast(
     val date: String,
     val temperature: String,
-    val weatherIcon: Int
+    val weatherType: String
 )
+
