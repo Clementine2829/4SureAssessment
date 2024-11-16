@@ -3,21 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Search Bar -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/search_location_input"
-        android:layout_width="match_parent"
+        android:layout_width="317dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp">
+        android:layout_marginStart="@dimen/margin_normal"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginEnd="@dimen/margin_normal"
+        android:layout_marginRight="@dimen/margin_normal"
+        android:layout_marginBottom="@dimen/margin_normal">
+
         <com.google.android.material.textfield.TextInputEditText
-            android:hint="Search location"
-            android:inputType="text"
             android:id="@+id/search_location_edittext"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:hint="Search location"
+            android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Map View -->
     <fragment
         android:id="@+id/map_view"
         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -30,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:contentDescription="@string/todo"
-        app:srcCompat="@drawable/ic_temperature" />
+        android:layout_margin="@dimen/margin_normal"
+        android:contentDescription="@string/todo" />
+
 </RelativeLayout>

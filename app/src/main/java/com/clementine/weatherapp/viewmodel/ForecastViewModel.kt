@@ -29,6 +29,7 @@ class ForecastViewModel : ViewModel() {
     val dailyForecasts: LiveData<List<DailyForecast>> get() = _dailyForecasts
 
     private val TAG = "ForecastViewModel"
+    private val apiKey = "ab7186cefd34a6ff2e01237a2ea11e58"
 
     init {
         _forecastList.value = emptyList()
@@ -38,20 +39,23 @@ class ForecastViewModel : ViewModel() {
         _selectedForecast.value = forecast
     }
 
-    fun fetchCurrentWeather(latitude: Double, longitude: Double, apiKey: String) {
+    fun fetchCurrentWeather(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             try {
                 Log.d(TAG, "Fetching current weather for lat: $latitude, lon: $longitude")
                 val response = apiService.getCurrentWeather(latitude, longitude, apiKey)
+//                val fiveDaysList = apiService.getWeatherForecast(latitude, longitude, apiKey)
                 _currentWeather.value = response
+//                _dailyForecasts.value = fiveDaysList
                 Log.d(TAG, "Current weather response: $response")
+//                Log.d(TAG, "Current five Days List response: $fiveDaysList")
             } catch (e: Exception) {
                 Log.e(TAG, "Error fetching current weather", e)
             }
         }
     }
 
-    fun fetchForecast(latitude: Double, longitude: Double, apiKey: String) {
+    fun fetchForecast(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             try {
                 Log.d(TAG, "Fetching forecast for lat: $latitude, lon: $longitude")
@@ -74,6 +78,19 @@ class ForecastViewModel : ViewModel() {
                     DailyForecast("Friday", "2024-11-21", "Sunny", 1015)
                 )
                 _dailyForecasts.value = items
+            } catch (e: Exception) {
+                Log.e(TAG, "Error fetching forecast", e)
+            }
+        }
+    }
+
+    fun fetchSearchedForecast(query: String) {
+        if (query.isEmpty()) return
+        viewModelScope.launch {
+            try {
+                val forecastResponse = apiService.searchLocations(query, apiKey)
+//                _forecast.value = forecastResponse
+                Log.d(TAG, "Forecast search response: $forecastResponse")
             } catch (e: Exception) {
                 Log.e(TAG, "Error fetching forecast", e)
             }
