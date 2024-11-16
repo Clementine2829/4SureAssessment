@@ -1,28 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
+
         <variable
             name="viewModel"
             type="com.clementine.weatherapp.viewmodel.ForecastViewModel" />
     </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{viewModel.selectedForecast.date}" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/current_weather_information"
+                    android:textAllCaps="true"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvTemperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:text="@{viewModel.getFormattedTemperature}"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_5x_large" />
+
+                <TextView
+                    android:id="@+id/tvTownName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:text="@{viewModel.currentWeather.name}"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/ic_location" />
+
+                <TextView
+                    android:id="@+id/tvHumidity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_normal" />
+                <!--                    android:text="@{viewModel.currentWeather.main.humidity + '%'}" />-->
+
+                <TextView
+                    android:id="@+id/tvDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:text="@{viewModel.currentWeather.weather[0].description}"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_large" />
+
+                <TextView
+                    android:id="@+id/tvPressure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:text="@{viewModel.getFormattedPressure}"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_normal" />
+            </LinearLayout>
+        </ScrollView>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.selectedForecast.temperature}" />
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:text="@string/weather_forecast"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_normal"
+            android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewForecast"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.selectedForecast.weatherType}" />
+            android:layout_marginTop="@dimen/margin_small"
+            android:paddingStart="@dimen/padding_small"
+            android:paddingEnd="@dimen/padding_small"
+            android:scrollbars="horizontal" />
     </LinearLayout>
 </layout>

@@ -64,7 +64,13 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
+    implementation(libs.retrofit)
+    implementation(libs.retrofitgson)
+    implementation(libs.gson)
+
+//    implementation(libs.retrofit.converter.gson)
+
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
 
 }

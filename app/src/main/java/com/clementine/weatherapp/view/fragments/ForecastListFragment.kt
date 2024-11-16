@@ -10,8 +10,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.clementine.weatherapp.R
 import com.clementine.weatherapp.databinding.FragmentForecastListBinding
-import com.clementine.weatherapp.viewmodel.ForecastViewModel
 import com.clementine.weatherapp.view.adapters.ForecastAdapter
+import com.clementine.weatherapp.viewmodel.ForecastViewModel
 
 class ForecastListFragment : Fragment() {
 
@@ -36,13 +36,16 @@ class ForecastListFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = ForecastAdapter(viewModel.forecastList.value ?: emptyList()) { forecast ->
                 viewModel.selectForecast(forecast)
+
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.recyclerView, ForecastDetailFragment())
+                    .addToBackStack(null)
+                    .commit()
             }
         }
 
         viewModel.forecastList.observe(viewLifecycleOwner) { forecastList ->
-            (binding.recyclerView.adapter as ForecastAdapter).apply {
-                (this as? ForecastAdapter)?.submitList(forecastList)
-            }
+            (binding.recyclerView.adapter as ForecastAdapter).submitList(forecastList)
         }
     }
 }

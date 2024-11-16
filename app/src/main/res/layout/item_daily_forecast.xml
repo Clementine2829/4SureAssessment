@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/borders"
+    android:padding="@dimen/padding_normal"
+    android:layout_margin="@dimen/margin_small">
+
+    <TextView
+        android:id="@+id/dayName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_small"
+        android:text="Tomorrow"
+        android:textStyle="bold"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_small"
+        android:text="17 May"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/mainWeather"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_small"
+        android:text="17%"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/pressure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_small"
+        android:text="107"
+        android:textColor="@color/black"/>
+</LinearLayout>

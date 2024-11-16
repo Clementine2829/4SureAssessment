@@ -2,4 +2,6 @@
     <string name="app_name">WeatherApp</string>
     <string name="todo">TODO</string>
     <string name="weather_icon">Weather icon</string>
+    <string name="current_weather_information">Current Weather Information</string>
+    <string name="weather_forecast">Weather forecast</string>
 </resources>
