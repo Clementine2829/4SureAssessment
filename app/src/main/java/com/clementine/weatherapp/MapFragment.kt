@@ -27,7 +27,7 @@ class MapFragment : Fragment() {
         }
 
         fabToggleTemp.setOnClickListener {
-
+            // Implement temperature toggle logic
         }
 
         return view
