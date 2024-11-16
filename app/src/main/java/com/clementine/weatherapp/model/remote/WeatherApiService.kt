@@ -35,7 +35,8 @@ interface WeatherApiService {
     ): List<ReverseGeocodingResponse>
 
     // Search locations by name
-    @GET("geo/1.0/direct")
+//    @GET("geo/1.0/direct")
+    @GET("find")
     suspend fun searchLocations(
         @Query("q") query: String,
         @Query("appid") apiKey: String
