@@ -1,0 +1,51 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Weather Icon -->
+        <ImageView
+            android:id="@+id/weather_icon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_sunny" />
+
+        <!-- Temperature -->
+        <TextView
+            android:id="@+id/text_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/weather_icon"
+            android:layout_centerHorizontal="true"
+            android:textSize="32sp"
+            android:textColor="@color/black"
+            android:text="25°C" />
+
+        <!-- Other details (Humidity, Wind, etc.) -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_temperature"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:paddingTop="16dp">
+            <TextView android:text="Humidity: 60%"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+            <TextView android:text="Wind Speed: 5 m/s"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>
