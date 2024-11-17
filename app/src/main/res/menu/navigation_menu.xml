@@ -7,6 +7,9 @@
         android:id="@+id/pref"
         android:title="@string/pref"/>
     <item
+        android:id="@+id/logs"
+        android:title="@string/logs"/>
+    <item
         android:id="@+id/close_app"
         android:title="@string/close_app"/>
 </menu>

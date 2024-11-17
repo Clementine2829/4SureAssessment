@@ -11,8 +11,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.clementine.weatherapp.view.adapters.LogsAdapter
 import com.clementine.weatherapp.view.fragments.ForecastDetailFragment
 import com.clementine.weatherapp.view.fragments.MapFragment
+import com.clementine.weatherapp.viewmodel.ForecastViewModel
 import com.clementine.weatherapp.viewmodel.SettingsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -20,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private val PREFS_NAME = "WeatherAppPrefs"
     private val KEY_TEMP_UNIT = "temp_unit"
+    private val forecastViewModel: ForecastViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,6 +104,11 @@ class MainActivity : AppCompatActivity() {
                 true
             }
 
+            R.id.logs -> {
+                displayLogsDialog()
+                true
+            }
+
             R.id.close_app -> {
                 closeApp()
                 true
@@ -125,7 +135,12 @@ class MainActivity : AppCompatActivity() {
     private fun showAboutDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("About")
-        builder.setMessage("This is an example app to demonstrate a toolbar with an overflow menu.")
+        val aboutMessage = """
+        App Version: 1.0.0
+        Developed by: Clementine Mamogale
+        Description: This is a simple weather app that provides weather updates based on your location.
+    """.trimIndent()
+        builder.setMessage(aboutMessage)
         builder.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
         builder.show()
     }
@@ -161,6 +176,30 @@ class MainActivity : AppCompatActivity() {
             }
             dialog.dismiss()
 
+        }
+    }
+
+    private fun displayLogsDialog() {
+        val dialogBuilder = AlertDialog.Builder(this)
+        val view = layoutInflater.inflate(R.layout.logs_dialog, null)
+        dialogBuilder.setView(view)
+
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewLogs)
+
+        val dialog = dialogBuilder.create()
+        dialog.show()
+
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        forecastViewModel.weatherLogs.observe(this) { weatherLogs ->
+            val adapter = LogsAdapter(weatherLogs)
+            recyclerView.adapter = adapter
+        }
+        forecastViewModel.loadWeatherLogs(this)
+
+        val buttonClose = view.findViewById<Button>(R.id.buttonClose)
+
+        buttonClose.setOnClickListener {
+            dialog.dismiss()
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.clementine.weatherapp.viewmodel
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,8 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.clementine.weatherapp.model.CurrentWeatherResponse
 import com.clementine.weatherapp.model.DailyForecast
 import com.clementine.weatherapp.model.Forecast
+import com.clementine.weatherapp.model.WeatherDatabaseHelper
+import com.clementine.weatherapp.model.WeatherEntity
 import com.clementine.weatherapp.network.RetrofitClient.apiService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
@@ -29,6 +34,9 @@ class ForecastViewModel : ViewModel() {
     private val _forecast = MutableLiveData<List<DailyForecast>>()
     val forecast: LiveData<List<DailyForecast>> get() = _forecast
 
+    private val _weatherLogs = MutableLiveData<List<WeatherEntity>>()
+    val weatherLogs: LiveData<List<WeatherEntity>> = _weatherLogs
+
     private val TAG = "ForecastViewModel"
     private val apiKey = "ab7186cefd34a6ff2e01237a2ea11e58"
 
@@ -40,15 +48,27 @@ class ForecastViewModel : ViewModel() {
         _selectedForecast.value = forecast
     }
 
-    fun fetchCurrentWeather(latitude: Double, longitude: Double) {
+    fun fetchCurrentWeather(latitude: Double, longitude: Double, unitType:String, context: Context) {
         viewModelScope.launch {
             try {
-                Log.d(TAG, "Fetching current weather for lat: $latitude, lon: $longitude")
                 val response = apiService.getCurrentWeather(latitude, longitude, apiKey)
                 _currentWeather.value = response
-                Log.d(TAG, "Current weather response: $response")
+
+                val dbHelper = WeatherDatabaseHelper(context)
+                dbHelper.insertWeather(
+                    townName = response.name,
+                    latitude = latitude,
+                    longitude = longitude,
+                    weather = "${response.main.temp}",
+                    unitType = unitType,
+                    humidity = response.main.humidity,
+                    description = response.weather[0].description,
+                    pressure = response.main.pressure
+                )
+
+
             } catch (e: Exception) {
-                Log.e(TAG, "Error fetching current weather", e)
+                e.printStackTrace()
             }
         }
     }
@@ -79,7 +99,6 @@ class ForecastViewModel : ViewModel() {
                     val date = dateFormat.format(dateTime)
                     val dayOfWeek = dayFormat.format(dateTime)
 
-                    val temperature = mainObject.getDouble("temp")
                     val temperatureMin = mainObject.getDouble("temp_min")
                     val temperatureMax = mainObject.getDouble("temp_max")
                     val pressure = mainObject.getInt("pressure")
@@ -107,6 +126,14 @@ class ForecastViewModel : ViewModel() {
                 Log.e(TAG, "Error fetching forecast", e)
             }
         }
+    }
+    fun loadWeatherLogs(context: Context) {
+        val dbHelper = WeatherDatabaseHelper(context)
+        val weatherList = dbHelper.getAllWeather()
+        for (weather in weatherList) {
+            println("Town: ${weather.townName}, Weather: ${weather.weather}, Description: ${weather.description}")
+        }
+        _weatherLogs.value = weatherList
     }
 
     fun getFormattedTemperature(): String {

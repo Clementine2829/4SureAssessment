@@ -54,7 +54,7 @@ class ForecastDetailFragment : Fragment() {
             val description = weather?.weather?.get(0)?.description ?: "No Description"
             binding.tvTemperature.text = displayTemp(temperature, temperatureUnit)
             binding.tvTownName.text = weather?.name ?: "Unknown Location"
-            binding.tvHumidity.text = "Huminity: ${weather?.main?.humidity ?: 0}%"
+            binding.tvHumidity.text = "Humidity: ${weather?.main?.humidity ?: 0}%"
             binding.tvDescription.text = description.replaceFirstChar { it.uppercase() }
             binding.tvPressure.text = "Pressure: ${weather?.main?.pressure ?: 0} hPa"
 

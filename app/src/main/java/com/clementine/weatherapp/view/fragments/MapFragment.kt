@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import com.clementine.weatherapp.R
 import com.clementine.weatherapp.databinding.FragmentMapBinding
 import com.clementine.weatherapp.viewmodel.ForecastViewModel
+import com.clementine.weatherapp.viewmodel.SettingsViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -23,9 +24,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private lateinit var binding: FragmentMapBinding
-    private val viewModel: ForecastViewModel by activityViewModels()
+    private val forecastViewModel: ForecastViewModel by activityViewModels()
+    private val settingsViewModel: SettingsViewModel by activityViewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_map, container, false)
 
         binding = FragmentMapBinding.bind(view)
@@ -52,10 +58,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             map.addMarker(MarkerOptions().position(latLng))
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
 
-            viewModel.fetchForecast(latLng.latitude, latLng.longitude)
-            viewModel.fetchCurrentWeather(latLng.latitude, latLng.longitude)
+            forecastViewModel.fetchForecast(latLng.latitude, latLng.longitude)
+            forecastViewModel.fetchCurrentWeather(
+                latLng.latitude,
+                latLng.longitude,
+                settingsViewModel.temperatureUnit.value ?: "",
+                requireContext()
+            )
         }
     }
+
     private fun searchLocation(location: String) {
         val geocoder = Geocoder(requireContext(), Locale.getDefault())
         try {
@@ -69,11 +81,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     map.addMarker(MarkerOptions().position(latLng).title(address.getAddressLine(0)))
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
 
-                    viewModel.fetchForecast(latLng.latitude, latLng.longitude)
-                    viewModel.fetchCurrentWeather(latLng.latitude, latLng.longitude)
+                    forecastViewModel.fetchForecast(latLng.latitude, latLng.longitude)
+                    forecastViewModel.fetchCurrentWeather(
+                        latLng.latitude,
+                        latLng.longitude,
+                        settingsViewModel.temperatureUnit.value ?: "",
+                        requireContext()
+                    )
                 } else {
                     binding.searchLocationEdittext.error = "Location not found"
-                    Toast.makeText(requireContext(), "Location not found", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Location not found", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         } catch (e: Exception) {

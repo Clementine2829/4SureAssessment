@@ -32,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:layout_marginTop="@dimen/margin_x4_large"
+                    android:layout_marginTop="@dimen/margin_large"
                     android:text="@string/current_weather_information"
                     android:textAllCaps="true"
                     android:textColor="@color/dark_blue"
@@ -47,7 +47,7 @@
                     android:layout_marginTop="@dimen/margin_small"
                     android:text="@{viewModel.getFormattedTemperature}"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_5x_large" />
+                    android:textSize="@dimen/text_size_xxx_large" />
 
                 <TextView
                     android:id="@+id/tvTownName"
