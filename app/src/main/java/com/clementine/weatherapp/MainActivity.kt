@@ -1,12 +1,10 @@
 package com.clementine.weatherapp
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.clementine.weatherapp.view.fragments.ForecastDetailFragment
 import com.clementine.weatherapp.view.fragments.MapFragment
