@@ -22,7 +22,6 @@ class ForecastViewModel : ViewModel() {
     val forecastList: LiveData<List<Forecast>> = _forecastList
 
     private val _selectedForecast = MutableLiveData<Forecast?>()
-    val selectedForecast: LiveData<Forecast?> = _selectedForecast
 
     private val _currentWeather = MutableLiveData<CurrentWeatherResponse>()
     val currentWeather: LiveData<CurrentWeatherResponse> get() = _currentWeather
@@ -93,11 +92,12 @@ class ForecastViewModel : ViewModel() {
                             DailyForecast(
                                 dayOfWeek,
                                 date,
-                                temperature.toString(),
-                                "$temperatureMin/$temperatureMax°",
-                                description.toString().replaceFirstChar { it.uppercase() },
+                                temperatureMin,
+                                temperatureMax,
+                                description.replaceFirstChar { it.uppercase() },
                                 "Humidity: ${humidity}%",
-                                pressure
+                                pressure,
+                                ""
                             )
                         )
                     }
@@ -110,7 +110,7 @@ class ForecastViewModel : ViewModel() {
     }
 
     fun getFormattedTemperature(): String {
-        return "${currentWeather.value?.main?.temp?.toString() ?: "N/A"}°C"
+        return "${currentWeather.value?.main?.temp?.toString() ?: "N/A"}°"
     }
 
     fun getFormattedPressure(): String {

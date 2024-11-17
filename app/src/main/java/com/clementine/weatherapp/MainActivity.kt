@@ -1,21 +1,33 @@
 package com.clementine.weatherapp
 
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.widget.Button
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.clementine.weatherapp.view.fragments.ForecastDetailFragment
 import com.clementine.weatherapp.view.fragments.MapFragment
+import com.clementine.weatherapp.viewmodel.SettingsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var sharedPreferences: SharedPreferences
+    private val PREFS_NAME = "WeatherAppPrefs"
+    private val KEY_TEMP_UNIT = "temp_unit"
+    private val settingsViewModel: SettingsViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         title = "Weather App"
+        sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, MapFragment())
@@ -82,6 +94,11 @@ class MainActivity : AppCompatActivity() {
                 true
             }
 
+            R.id.pref -> {
+                displayTemperatureUnitDialog()
+                true
+            }
+
             R.id.close_app -> {
                 closeApp()
                 true
@@ -111,5 +128,39 @@ class MainActivity : AppCompatActivity() {
         builder.setMessage("This is an example app to demonstrate a toolbar with an overflow menu.")
         builder.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
         builder.show()
+    }
+
+    private fun displayTemperatureUnitDialog() {
+        val dialogBuilder = AlertDialog.Builder(this)
+        val view = layoutInflater.inflate(R.layout.dialog_temperature_selection, null)
+        dialogBuilder.setView(view)
+
+        val radioGroup = view.findViewById<RadioGroup>(R.id.radioGroup)
+        val radioCelsius = view.findViewById<RadioButton>(R.id.radioCelsius)
+        val radioFahrenheit = view.findViewById<RadioButton>(R.id.radioFahrenheit)
+        val buttonSave = view.findViewById<Button>(R.id.buttonSave)
+
+        val savedUnit = sharedPreferences.getString(KEY_TEMP_UNIT, "C")
+        if (savedUnit == "C") {
+            radioCelsius.isChecked = true
+        } else {
+            radioFahrenheit.isChecked = true
+        }
+
+        val dialog = dialogBuilder.create()
+        dialog.show()
+
+        buttonSave.setOnClickListener {
+            val selectedId = radioGroup.checkedRadioButtonId
+            val selectedUnit = if (selectedId == R.id.radioFahrenheit) "F" else "C"
+
+            settingsViewModel.setTemperatureUnit(selectedUnit)
+            with(sharedPreferences.edit()) {
+                putString(KEY_TEMP_UNIT, selectedUnit)
+                apply()
+            }
+            dialog.dismiss()
+
+        }
     }
 }
