@@ -10,6 +10,11 @@ import com.clementine.weatherapp.model.DailyForecast
 import com.clementine.weatherapp.model.Forecast
 import com.clementine.weatherapp.network.RetrofitClient.apiService
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
+import org.json.JSONArray
+import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ForecastViewModel : ViewModel() {
 
@@ -22,11 +27,8 @@ class ForecastViewModel : ViewModel() {
     private val _currentWeather = MutableLiveData<CurrentWeatherResponse>()
     val currentWeather: LiveData<CurrentWeatherResponse> get() = _currentWeather
 
-    private val _forecast = MutableLiveData<List<Forecast>>()
-    val forecast: LiveData<List<Forecast>> get() = _forecast
-
-    private val _dailyForecasts = MutableLiveData<List<DailyForecast>>()
-    val dailyForecasts: LiveData<List<DailyForecast>> get() = _dailyForecasts
+    private val _forecast = MutableLiveData<List<DailyForecast>>()
+    val forecast: LiveData<List<DailyForecast>> get() = _forecast
 
     private val TAG = "ForecastViewModel"
     private val apiKey = "ab7186cefd34a6ff2e01237a2ea11e58"
@@ -44,11 +46,8 @@ class ForecastViewModel : ViewModel() {
             try {
                 Log.d(TAG, "Fetching current weather for lat: $latitude, lon: $longitude")
                 val response = apiService.getCurrentWeather(latitude, longitude, apiKey)
-//                val fiveDaysList = apiService.getWeatherForecast(latitude, longitude, apiKey)
                 _currentWeather.value = response
-//                _dailyForecasts.value = fiveDaysList
                 Log.d(TAG, "Current weather response: $response")
-//                Log.d(TAG, "Current five Days List response: $fiveDaysList")
             } catch (e: Exception) {
                 Log.e(TAG, "Error fetching current weather", e)
             }
@@ -58,39 +57,52 @@ class ForecastViewModel : ViewModel() {
     fun fetchForecast(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             try {
-                Log.d(TAG, "Fetching forecast for lat: $latitude, lon: $longitude")
-                val forecastResponse = apiService.getWeatherForecast(latitude, longitude, apiKey)
-                _forecast.value = forecastResponse
-                Log.d(TAG, "Forecast response: $forecastResponse")
-            } catch (e: Exception) {
-                Log.e(TAG, "Error fetching forecast", e)
-            }
-        }
-    }
-    fun fetchForecastList() {
-        viewModelScope.launch {
-            try {
-                val items: List<DailyForecast> = listOf(
-                    DailyForecast("Monday", "2024-11-17", "Sunny", 1015),
-                    DailyForecast("Tuesday", "2024-11-18", "Cloudy", 1012),
-                    DailyForecast("Wednesday", "2024-11-19", "Rainy", 1008),
-                    DailyForecast("Thursday", "2024-11-20", "Windy", 1010),
-                    DailyForecast("Friday", "2024-11-21", "Sunny", 1015)
-                )
-                _dailyForecasts.value = items
-            } catch (e: Exception) {
-                Log.e(TAG, "Error fetching forecast", e)
-            }
-        }
-    }
+                val response: ResponseBody =
+                    apiService.getWeatherForecast(latitude, longitude, apiKey)
+                val jsonString = response.string()
+                val jsonObject = JSONObject(jsonString)
 
-    fun fetchSearchedForecast(query: String) {
-        if (query.isEmpty()) return
-        viewModelScope.launch {
-            try {
-                val forecastResponse = apiService.searchLocations(query, apiKey)
-//                _forecast.value = forecastResponse
-                Log.d(TAG, "Forecast search response: $forecastResponse")
+                val forecastsArray: JSONArray = jsonObject.getJSONArray("list")
+                val forecastList = mutableListOf<DailyForecast>()
+                val uniqueDays = mutableSetOf<String>()
+
+                for (i in 0 until forecastsArray.length()) {
+                    val forecastObject: JSONObject = forecastsArray.getJSONObject(i)
+
+                    val mainObject = forecastObject.getJSONObject("main")
+                    val weatherArray: JSONArray = forecastObject.getJSONArray("weather")
+                    val weatherObject: JSONObject = weatherArray.getJSONObject(0)
+
+                    val dt = forecastObject.getLong("dt")
+                    val dateTime = java.util.Date(dt * 1000) // Convert to milliseconds
+                    val dateFormat = SimpleDateFormat("dd MMM", Locale.getDefault())
+                    val dayFormat = SimpleDateFormat("EEEE", Locale.getDefault())
+                    val date = dateFormat.format(dateTime)
+                    val dayOfWeek = dayFormat.format(dateTime)
+
+                    val temperature = mainObject.getDouble("temp")
+                    val temperatureMin = mainObject.getDouble("temp_min")
+                    val temperatureMax = mainObject.getDouble("temp_max")
+                    val pressure = mainObject.getInt("pressure")
+                    val humidity = mainObject.getInt("humidity")
+                    val description = weatherObject.getString("description")
+
+                    if (!uniqueDays.contains(date)) {
+                        uniqueDays.add(date)
+                        forecastList.add(
+                            DailyForecast(
+                                dayOfWeek,
+                                date,
+                                temperature.toString(),
+                                "$temperatureMin/$temperatureMax°",
+                                description.toString().replaceFirstChar { it.uppercase() },
+                                "Humidity: ${humidity}%",
+                                pressure
+                            )
+                        )
+                    }
+                }
+                _forecast.value = forecastList
             } catch (e: Exception) {
                 Log.e(TAG, "Error fetching forecast", e)
             }
@@ -104,5 +116,4 @@ class ForecastViewModel : ViewModel() {
     fun getFormattedPressure(): String {
         return "${currentWeather.value?.main?.pressure?.toString() ?: "N/A"}hPa"
     }
-
 }

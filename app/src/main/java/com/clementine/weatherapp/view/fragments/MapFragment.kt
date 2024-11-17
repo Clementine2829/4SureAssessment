@@ -6,11 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.clementine.weatherapp.R
-import com.clementine.weatherapp.databinding.FragmentForecastListBinding
 import com.clementine.weatherapp.databinding.FragmentMapBinding
 import com.clementine.weatherapp.viewmodel.ForecastViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -35,10 +33,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         binding.fabToggleTemp.setOnClickListener {
             val location = binding.searchLocationEdittext.text.toString()
             if (location.isNotEmpty()) {
-//                viewModel.fetchSearchedForecast(location)
                 searchLocation(location)
             } else {
-//                Toast.makeText(requireContext(), "Please enter a location", Toast.LENGTH_SHORT).show()
                 binding.searchLocationEdittext.error = "Please enter a location"
             }
         }
@@ -58,7 +54,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
             viewModel.fetchForecast(latLng.latitude, latLng.longitude)
             viewModel.fetchCurrentWeather(latLng.latitude, latLng.longitude)
-            viewModel.fetchForecastList()
         }
     }
     private fun searchLocation(location: String) {
@@ -76,8 +71,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
                     viewModel.fetchForecast(latLng.latitude, latLng.longitude)
                     viewModel.fetchCurrentWeather(latLng.latitude, latLng.longitude)
-                    viewModel.fetchForecastList()
                 } else {
+                    binding.searchLocationEdittext.error = "Location not found"
                     Toast.makeText(requireContext(), "Location not found", Toast.LENGTH_SHORT).show()
                 }
             }

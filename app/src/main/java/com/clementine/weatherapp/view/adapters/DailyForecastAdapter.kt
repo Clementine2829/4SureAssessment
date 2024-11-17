@@ -14,8 +14,12 @@ class DailyForecastAdapter(private var forecastList: List<DailyForecast>) :
     class ForecastViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val dayName: TextView = view.findViewById(R.id.dayName)
         val date: TextView = view.findViewById(R.id.date)
-        val mainWeather: TextView = view.findViewById(R.id.mainWeather)
+//        val temp: TextView = view.findViewById(R.id.temp)
+        val temp_ave: TextView = view.findViewById(R.id.temp_ave)
+        val description: TextView = view.findViewById(R.id.description)
+        val humidity: TextView = view.findViewById(R.id.humidity)
         val pressure: TextView = view.findViewById(R.id.pressure)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastViewHolder {
@@ -28,7 +32,10 @@ class DailyForecastAdapter(private var forecastList: List<DailyForecast>) :
         val forecast = forecastList[position]
         holder.dayName.text = forecast.dayName
         holder.date.text = forecast.date
-        holder.mainWeather.text = forecast.main
+//        holder.temp.text = forecast.temp
+        holder.temp_ave.text = forecast.temp_ave
+        holder.description.text = forecast.description
+        holder.humidity.text = forecast.humidity
         holder.pressure.text = "${forecast.pressure} hPa"
     }
 
