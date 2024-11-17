@@ -67,16 +67,22 @@
                     android:layout_marginTop="@dimen/margin_small"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_normal" />
-                <!--                    android:text="@{viewModel.currentWeather.main.humidity + '%'}" />-->
 
                 <TextView
                     android:id="@+id/tvDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_small"
-                    android:textStyle="bold"
                     android:text="@{viewModel.currentWeather.weather[0].description}"
                     android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/tvTemperatureIcon"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:scaleType="centerCrop"
                     android:textSize="@dimen/text_size_large" />
 
                 <TextView

@@ -33,7 +33,7 @@ class DailyForecastAdapter(private var forecastList: List<DailyForecast>) :
         holder.dayName.text = forecast.dayName
         holder.date.text = forecast.date
 //        holder.temp.text = forecast.temp
-        holder.temp_ave.text = forecast.temp_ave
+        holder.temp_ave.text = "${forecast.tempMin}/${forecast.tempMax}°${forecast.tempUnit}"
         holder.description.text = forecast.description
         holder.humidity.text = forecast.humidity
         holder.pressure.text = "${forecast.pressure} hPa"
