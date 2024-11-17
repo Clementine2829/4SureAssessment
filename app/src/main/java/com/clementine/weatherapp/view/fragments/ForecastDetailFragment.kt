@@ -38,15 +38,15 @@ class ForecastDetailFragment : Fragment() {
         binding.recyclerViewForecast.adapter = forecastAdapter
 
         viewModel.currentWeather.observe(viewLifecycleOwner) { weather ->
+            val description = weather?.weather?.get(0)?.description ?: "No Description"
             binding.tvTemperature.text = "${weather?.main?.temp?.let { String.format("%.1f", it) } ?: 0.0}°C"
             binding.tvTownName.text = weather?.name ?: "Unknown Location"
             binding.tvHumidity.text = "Huminity: ${weather?.main?.humidity ?: 0}%"
-            binding.tvDescription.text = weather?.weather?.get(0)?.description ?: "No Description"
+            binding.tvDescription.text = description.replaceFirstChar { it.uppercase() }
             binding.tvPressure.text = "Pressure: ${weather?.main?.pressure ?: 0} hPa"
         }
-
-        viewModel.dailyForecasts.observe(viewLifecycleOwner) { forecasts ->
-            forecastAdapter.updateForecasts(forecasts)
+        viewModel.forecast.observe(viewLifecycleOwner){
+            viewModel.forecast.value?.let { forecastAdapter.updateForecasts(it) }
         }
     }
 }

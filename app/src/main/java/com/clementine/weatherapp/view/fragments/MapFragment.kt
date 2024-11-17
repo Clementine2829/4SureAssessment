@@ -54,7 +54,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
             viewModel.fetchForecast(latLng.latitude, latLng.longitude)
             viewModel.fetchCurrentWeather(latLng.latitude, latLng.longitude)
-            viewModel.fetchForecastList()
         }
     }
     private fun searchLocation(location: String) {
@@ -72,7 +71,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
                     viewModel.fetchForecast(latLng.latitude, latLng.longitude)
                     viewModel.fetchCurrentWeather(latLng.latitude, latLng.longitude)
-                    viewModel.fetchForecastList()
                 } else {
                     binding.searchLocationEdittext.error = "Location not found"
                     Toast.makeText(requireContext(), "Location not found", Toast.LENGTH_SHORT).show()
