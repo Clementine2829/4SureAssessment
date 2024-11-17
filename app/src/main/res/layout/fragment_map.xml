@@ -18,7 +18,7 @@
             android:id="@+id/search_location_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Search location"
+            android:hint="@string/search_location"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -34,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        app:srcCompat="@drawable/ic_search"
         android:layout_margin="@dimen/margin_normal"
         android:contentDescription="@string/todo" />
 

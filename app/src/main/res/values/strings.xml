@@ -4,4 +4,9 @@
     <string name="weather_icon">Weather icon</string>
     <string name="current_weather_information">Current Weather Information</string>
     <string name="weather_forecast">Weather forecast</string>
+    <string name="map">Map</string>
+    <string name="forecast">Forecast</string>
+    <string name="about">About</string>
+    <string name="close_app">Close App</string>
+    <string name="search_location">Search location</string>
 </resources>
