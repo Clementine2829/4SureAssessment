@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -56,6 +57,21 @@ class ForecastDetailFragment : Fragment() {
             binding.tvHumidity.text = "Huminity: ${weather?.main?.humidity ?: 0}%"
             binding.tvDescription.text = description.replaceFirstChar { it.uppercase() }
             binding.tvPressure.text = "Pressure: ${weather?.main?.pressure ?: 0} hPa"
+
+            val weatherCondition = weather?.weather?.get(0)?.main ?: "Unknown"
+            val imageView: ImageView = binding.tvTemperatureIcon
+            val drawableRes = when (weatherCondition) {
+                "Clear" -> R.drawable.ic_sunny
+                "Clouds" -> R.drawable.ic_cloud
+                "Rain" -> R.drawable.ic_rainy
+                "Thunderstorm" -> R.drawable.ic_thunderstorm
+                else -> null
+            }
+            if (drawableRes != null) {
+                imageView.setImageResource(drawableRes)
+            } else{
+                imageView.visibility = View.GONE
+            }
         }
         forecastViewModel.forecast.observe(viewLifecycleOwner) {
             forecastViewModel.forecast.value?.let {
