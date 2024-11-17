@@ -68,9 +68,6 @@ dependencies {
     implementation(libs.retrofitgson)
     implementation(libs.gson)
 
-//    implementation(libs.retrofit.converter.gson)
-
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
-
 }

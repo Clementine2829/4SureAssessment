@@ -39,5 +39,5 @@
         android:layout_height="wrap_content"
         android:text="@string/save"
         android:layout_gravity="end"
-        android:padding="8dp"/>
+        android:padding="@dimen/padding_small"/>
 </LinearLayout>
